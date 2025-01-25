@@ -1,5 +1,5 @@
 // Set your Mapbox access token here
-mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+mapboxgl.accessToken = 'sk.eyJ1IjoiYWxpbWVsdmkiLCJhIjoiY202YzRhZml0MGZoaDJsc2Yzb3drZnJpayJ9.oNKyV5cm_YOdbmwIWP5JOQ';
 
 let map;
 
