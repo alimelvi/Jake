@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets + Mapbox Map</title>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.16.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.16.1/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    #map {
+      width: 100%;
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Map from Google Sheets</h1>
+  <div id="map"></div>
+
+  <script>
+    // Mapbox setup
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWxpbWVsdmkiLCJhIjoiY2tocTJteXYyMDd2eTJ4cHRxZzQ3Z2s1cyJ9.3l8QeNBZsfGUk7x1HokJLQ';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [0, 0], // Default center [lng, lat]
+      zoom: 5
+    });
+
+    // URL of the published Google Sheet (replace with your own link)
+    const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRRiskCxnRe-JVxjsApnp1WA5lIVcBrFoZUHDfF9AwzV1pbQr_mB4kDYjWdFIFalVa1yJt_Vt-EvzxW/pub?gid=0&single=true&output=csv';
+
+    // Fetch data from Google Sheets
+    async function loadSheetData() {
+      const response = await fetch(googleSheetUrl);
+      const data = await response.text();
+      const rows = data.split('\n').slice(1); // Skip the header row
+
+      rows.forEach(row => {
+        const [latitude, longitude, label] = row.split(',');
+        if (latitude && longitude) {
+          new mapboxgl.Marker()
+            .setLngLat([parseFloat(longitude), parseFloat(latitude)])
+            .setPopup(new mapboxgl.Popup().setHTML(`<strong>${label}</strong>`))
+            .addTo(map);
+        }
+      });
+    }
+
+    // Load the data onto the map
+    loadSheetData();
+  </script>
+</body>
+</html>
